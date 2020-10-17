@@ -55,26 +55,12 @@ int main()
         if (currentTime == 600)
         {
             //double distLeft;
-            cout << "GPS: " << gps() << endl;
             if (gps() > 0.1)
-            {
-                //distLeft = gps() - ;
                 velocity = gps() / 30;
-                cout << "1 "
-                     << "velocity:" << velocity << endl;
-            }
             else if (gps() < -0.1)
-            {
-                //distLeft = gps() + 0.1;
                 velocity = -1 * gps() / 30;
-                cout << "2 " << velocity << endl;
-            }
             else
-            {
                 velocity = 0;
-                cout << "3 " << velocity << endl;
-            }
-            cout << "4" << endl;
             travel(velocity, errorTime);
             cout << "Current Time: " << currentTime << " minutes; Distance Left: " << gps() << " miles." << endl;
             continue;
