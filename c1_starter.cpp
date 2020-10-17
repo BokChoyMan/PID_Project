@@ -43,21 +43,22 @@ int main()
 
     /* DECLARE OTHER VARIABLES HERE */
     double velocity;
-    bool cont = true;
 
     while (currentTime < targetTime)
     {
         //cout << currentTime << endl; //if the current time has not been 10 hours yet, keep driving
         currentTime += timeGap; //adds 30 minutes to the clock
-        //cout << "After:" << currentTime << endl;
+
+        //How far are you from the target time
         double errorTime = targetTime - currentTime;
 
+        //When the car is almost at the destination, check how far it is and go exactly that velocity
         if (currentTime == 600)
         {
-            //double distLeft;
-            if (gps() > 0.1)
+            //If you are 0.1 miles above or below the target, change the velocity of the car to travel the exact velocity needed.
+            if (gps() > 1)
                 velocity = gps() / 30;
-            else if (gps() < -0.1)
+            else if (gps() < -1)
                 velocity = -1 * gps() / 30;
             else
                 velocity = 0;
@@ -66,8 +67,10 @@ int main()
             continue;
         }
 
+        //Take the average velocity and add it to the proportional component
         velocity = 500 / 600 + (gps() / errorTime) * k_p;
 
+        //Travel at
         travel(velocity, errorTime);
 
         cout << "Current Time: " << currentTime << " minutes; Distance Left: " << gps() << " miles." << endl; //formatting

@@ -26,7 +26,7 @@ int main()
     cout << setprecision(4);
 
     //PID Constants (Needs to be changed!)
-    double k_p = 0;
+    double k_p = 10;
     double k_i = 0;
     double k_d = 0;
 
@@ -39,17 +39,30 @@ int main()
     double currentTime = 0; //the current time (minutes)
 
     /* DECLARE OTHER VARIABLES HERE */
+    double c_error;
+    double currentDistance = 0;
+    double velocity;
+    double errorTime = 0;
 
     while (currentTime < targetTime)
     {                           //if the current time has not been 6 hours yet, keep driving
         currentTime += timeGap; //adds 30 minutes to the clock
+        currentDistance = targetDistance - getDistance();
 
-        double errorTime = targetTime - currentTime;
-        double errorDistance = getDistance() * sin(getAngle());
-        double velocity = targetDistance / targetTime + (errorDistance / errorTime) * k_p;
-        travel(velocity, getAngle(), errorTime);
-        cout << "Current Time: " << currentTime << " minutes; Distance Left: "
-             << getDistance() << " miles." << endl; //formatting
+        c_error = currentDistance * tan(getAngle());
+        errorTime = targetTime - currentTime;
+        double p = c_error / errorTime * k_p;
+
+        //travel(velocity, angle, time)
+        travel(p, getAngle(), 30);
+        /*
+        proportional = error*k_p
+     ,    integral = (integral_prior+error*iteration_time)*k_i
+        derivative = (error - error_prior)/iteration_time*k_d
+        */
+        cout
+            << "Current Time: " << currentTime << " minutes; Distance Left: "
+            << getDistance() << " miles." << endl; //formatting
     }
 
     return 0;
