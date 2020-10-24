@@ -39,28 +39,29 @@ int main()
     double currentTime = 0; //the current time (minutes)
 
     /* DECLARE OTHER VARIABLES HERE */
-    double c_error;
-    double currentDistance = 0;
+    double vel_x;
+    double vel_y;
     double velocity;
-    double errorTime = 0;
+    double errorTime;
 
     while (currentTime < targetTime)
     {                           //if the current time has not been 6 hours yet, keep driving
         currentTime += timeGap; //adds 30 minutes to the clock
-        currentDistance = targetDistance - getDistance();
 
-        c_error = currentDistance * tan(getAngle());
+        //get the amount of time left
         errorTime = targetTime - currentTime;
-        double p = c_error / errorTime * k_p;
 
-        //travel(velocity, angle, time)
-        travel(p, getAngle(), 30);
-        /*
-        proportional = error*k_p
-     ,    integral = (integral_prior+error*iteration_time)*k_i
-        derivative = (error - error_prior)/iteration_time*k_d
-        */
-        cout
+        //get the components of velocity
+        vel_x = getDistance() * cos(getAngle()) / errorTime * k_p;
+        vel_y = getDistance() * sin(getAngle()) / errorTime * k_p;
+
+        //calculate the velocity
+        velocity = sqrt(pow(vel_x, 2) + pow(vel_y, 2));
+
+        if (abs(getDistance()) > 1)
+            travel(velocity, getAngle(), 30); //travel(velocity, angle, time to travel)
+
+                cout
             << "Current Time: " << currentTime << " minutes; Distance Left: "
             << getDistance() << " miles." << endl; //formatting
     }

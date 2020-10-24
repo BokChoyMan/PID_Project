@@ -29,7 +29,7 @@ int main()
     cout << setprecision(2);
 
     //PID Constants (Hint: Only 1 of them need to be nonzero!)
-    const double k_p = 0.5299999;
+    const double k_p = .3;
     const double k_i = 0;
     const double k_d = 0;
 
@@ -42,7 +42,6 @@ int main()
     double currentTime = 0; //the current time (minutes)
 
     /* DECLARE OTHER VARIABLES HERE */
-    double velocity;
 
     while (currentTime < targetTime)
     {
@@ -51,7 +50,7 @@ int main()
 
         //How far are you from the target time
         double errorTime = targetTime - currentTime;
-
+        double velocity = 500 / 600;
         //When the car is almost at the destination, check how far it is and go exactly that velocity
         if (currentTime == 600)
         {
@@ -62,13 +61,13 @@ int main()
                 velocity = -1 * gps() / 30;
             else
                 velocity = 0;
-            travel(velocity, errorTime);
+            travel(velocity, 30);
             cout << "Current Time: " << currentTime << " minutes; Distance Left: " << gps() << " miles." << endl;
             continue;
         }
-
+        double errorVelocity = (gps() / errorTime);
         //Take the average velocity and add it to the proportional component
-        velocity = 500 / 600 + (gps() / errorTime) * k_p;
+        velocity += errorVelocity * k_p;
 
         //Travel at
         travel(velocity, errorTime);
